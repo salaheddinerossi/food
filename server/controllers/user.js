@@ -13,7 +13,7 @@ export const signin = async(req,res) => {
         const isPasswordCorrect = password == existingUser.password;
         if(!isPasswordCorrect) return res.status(400).json({message:"password is not correct"});
         // create token 
-        const token = jwt.sign({email:existingUser.email ,id:existingUser._id },'test',{expiresIn:'2h'});
+        const token = jwt.sign({existingUser },'test',{expiresIn:'2h'});
         res.status(200).json({result:existingUser,token})
     }catch(err){
         console.log(err)
