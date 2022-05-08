@@ -39,14 +39,9 @@ export const newaccount = async(req,res) => {
     
     // create account in db 
 
-    const result = await User.create({email:email,password:generatedPassword,firstName:firstName,lastName:lastName,type:type ,address:address })
-    console.log(result)
-    // create token 
+    const result = await User.create({email:email,password:generatedPassword,firstName:firstName,lastName:lastName,type:type ,address:address,state:'active' })
 
-    const token = jwt.sign({email:result.email,id:result._id},'test',{expiresIn:'2h'})
-    console.log(result , token , generatedPassword);
-
-    res.status(200).json({result,token})
+    res.status(200).json({result})
 
 
     }catch(err){
@@ -67,4 +62,18 @@ export const getUsers = async (req,res) => {
         res.status(400).json({message : error.message})
 
     }
+}
+
+//active user 
+
+export const switchStateUser = async (req,res) => {
+    //get the user
+    const email = req.body.email 
+    const user = await User.findOne({email})
+    //change the state 
+    if(user.state == "true") user.state = "false"
+    else user.state = "true"
+    // response 
+    res.status(200).send('state changed')
+
 }

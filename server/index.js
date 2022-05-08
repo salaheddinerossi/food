@@ -2,7 +2,8 @@ import express from "express"
 import bodyParser from 'body-parser'
 import mongoose from "mongoose"
 import cors from 'cors';
-import userRouter from './routes/user.js'
+import userRouter from './routes/user.js';
+import retuarantRouter from "./routes/resturant.js";
 
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(cors())
 
 
 app.use('/user', userRouter)
+app.use('/resturant', retuarantRouter)
 
 
 
