@@ -1,8 +1,12 @@
 import express from 'express' ;
+import { createResturant, showResturants, switchStateResturant, updateResturant } from '../controllers/resturant.js';
+import { auth, authEmpolyee } from '../middleware/user.js';
 
-import { authAdmin } from '../middleware/user.js';
+const resturantRouter = express.Router();
 
-const retuarantRouter = express.Router();
+resturantRouter.post('/create',authEmpolyee , createResturant)
+resturantRouter.get('/',auth, showResturants)
+resturantRouter.patch('/update',authEmpolyee,updateResturant)
+resturantRouter.patch('/switch',authEmpolyee,switchStateResturant)
 
-
-export default retuarantRouter;
+export default resturantRouter;

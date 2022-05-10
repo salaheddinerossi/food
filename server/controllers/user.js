@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 import User from '../models/user.js'
 import generator from 'generate-password'
+import { ObjectId } from 'mongodb';
 
 //singin in 
 export const signin = async(req,res) => {
@@ -39,7 +40,7 @@ export const newaccount = async(req,res) => {
     
     // create account in db 
 
-    const result = await User.create({email:email,password:generatedPassword,firstName:firstName,lastName:lastName,type:type ,address:address,state:'active' })
+    const result = await User.create({email:email,password:generatedPassword,firstName:firstName,lastName:lastName,type:type ,address:address,state:true })
 
     res.status(200).json({result})
 
@@ -66,14 +67,37 @@ export const getUsers = async (req,res) => {
 
 //active user 
 
-export const switchStateUser = async (req,res) => {
+export const updateUser = async (req,res) => {
     //get the user
-    const email = req.body.email 
-    const user = await User.findOne({email})
-    //change the state 
-    if(user.state == "true") user.state = "false"
-    else user.state = "true"
-    // response 
-    res.status(200).send('state changed')
+    const { firstName,lastName,type,email,address,password,state,id} = req.body;
+    //change the content 
+    const updateUser = await User.findByIdAndUpdate({_id: new ObjectId(id)},{
+        firstName:firstName,
+        lastName:lastName,
+        email:email,
+        type:type,
+        address:address,
+        password:password,
+        state:state,
+        _id:id,
+    })
 
+    // response 
+    res.status(200).send('user updated')
+
+}
+
+export const switchStateUser = async (req,res) => {
+    const id = new ObjectId(req.body.id);
+    const selectedUser = await User.findOne(id);
+    if (selectedUser.state== true){
+        const switchState = await User.findByIdAndUpdate(id,{
+            state:false
+        })
+    }else{
+        const switchState = await User.findByIdAndUpdate(id,{
+            state:true
+        })
+    }
+    res.status(200).send(selectedUser)
 }
