@@ -84,11 +84,15 @@ export const stats = async (req,res) => {
     const lm = (await Commande.find({createdAt:{$gte:d}})).length;
     console.log(lm)*/
 
-    var d = new Date();
-    d.setMonth(d.getMonth() - 1/4); //1 month ago
-    const lm = (await Commande.find({createdAt:{$gte:d}})).length;
-    console.log(lm)
+    /*const lw = (await Commande.find({
+        createdAt: {
+            $gte: new Date(new Date() - 7 * 60 * 60 * 24 * 1000)
+        }
+    
+    })).length
+    console.log(lw)*/
 
-
+    /*const NumberOfProducts = await Food.count();
+    console.log(NumberOfProducts);*/
 
 }
