@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 
 
 export const createResturant = async (req,res) => { 
-    const {name, address,ville} = req.body;
+    const {name, address,ville,image} = req.body;
 
     const employeeId= req.user._id
 
@@ -11,7 +11,7 @@ export const createResturant = async (req,res) => {
     const existingResturant = await Resturant.findOne({name})
     if(existingResturant) return res.status(400).send('resturant exist');
     //create new resturant 
-    const resturant = await Resturant.create({name:name,address:address,numberOfProducts:0,state:true,ville:ville,employeeId:employeeId})
+    const resturant = await Resturant.create({name:name,address:address,numberOfProducts:0,state:true,ville:ville,employeeId:employeeId,image:image})
     //send response 
     res.status(200).json({resutl:resturant})
 }

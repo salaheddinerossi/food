@@ -7,6 +7,7 @@ const resturantSchema = mongoose.Schema({
     numberOfProducts:{type:Number,required:true},
     state:{type:Boolean,required:true},
     image:{type:String,required:true},
+    createdAt : {type : Date ,default : new Date()},
     employeeId:{type:String,required:true},
     id:{type:String}
 })
