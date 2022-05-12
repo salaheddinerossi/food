@@ -2,10 +2,12 @@ import express from "express"
 import bodyParser from 'body-parser'
 import mongoose from "mongoose"
 import cors from 'cors';
+
 import userRouter from './routes/user.js';
 import resturantRouter from "./routes/resturant.js";
 import foodRoutrer from "./routes/food.js";
 import commandeRouter from "./routes/commande.js";
+import statsRouter from "./routes/stats.js";
 
 
 const app = express();
@@ -19,6 +21,7 @@ app.use('/user', userRouter)
 app.use('/food', foodRoutrer)
 app.use('/resturant', resturantRouter)
 app.use('/commande',commandeRouter)
+app.use('/stats',statsRouter)
 
 
 
