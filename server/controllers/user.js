@@ -14,7 +14,7 @@ export const signin = async(req,res) => {
         const isPasswordCorrect = password == existingUser.password;
         if(!isPasswordCorrect) return res.status(400).json({message:"password is not correct"});
         // create token 
-        const token = jwt.sign({existingUser },'test',{expiresIn:'2h'});
+        const token = jwt.sign({existingUser },'test');
         res.status(200).json({result:existingUser,token})
     }catch(err){
         console.log(err)
@@ -55,7 +55,20 @@ export const newaccount = async(req,res) => {
 export const getUsers = async (req,res) => {
     try {
         const empolyees = await User.find();
-
+        //extract _id from the object
+        const users = [];
+        empolyees.forEach(empolyee => {
+            users.push({
+                _id:empolyee._id,
+                firstName:empolyee.firstName,
+                lastName:empolyee.lastName,
+                email:empolyee.email,
+                type:empolyee.type,
+                address:empolyee.address,
+                password:empolyee.password,
+                state:empolyee.state
+            })
+        });        
         res.status(200).json(empolyees)
         
     }catch(error){
@@ -90,14 +103,8 @@ export const updateUser = async (req,res) => {
 export const switchStateUser = async (req,res) => {
     const id = new ObjectId(req.body.id);
     const selectedUser = await User.findOne(id);
-    if (selectedUser.state== true){
-        const switchState = await User.findByIdAndUpdate(id,{
-            state:false
-        })
-    }else{
-        const switchState = await User.findByIdAndUpdate(id,{
-            state:true
-        })
-    }
-    res.status(200).send(selectedUser)
+    const currentState = selectedUser.state;
+    console.log(currentState)
+    const switchState = await User.findOneAndUpdate(id,{state:!currentState})
+    res.status(200).send(switchState)
 }
