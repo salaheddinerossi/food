@@ -61,9 +61,21 @@ export const foodStats = async (req,res) => {
     )
 
     //response 
+    const totale = revenueByProducts.length
+    console.log(totale)
+    const page = parseInt(req.query.page || "1")
+    console.log(revenueByProducts)
+
+    const pageSize = 2;
+    const paginate = (array, pageSize, page) => {
+        return array.slice((page - 1) * pageSize, page * pageSize);
+      }
+      console.log(page)
+    const productsPaginated = paginate(revenueByProducts, pageSize, page);
+      
 
     res.status(200).json({
-        sales,lastMonthSales,lastWeekSales,NumberOfProducts,revenueLastMonth,totalRevenue,revenueByProducts
+        sales,lastMonthSales,lastWeekSales,NumberOfProducts,revenueLastMonth:revenueLastMonth[0].total,totalRevenue:totalRevenue[0].total,revenueByProducts:productsPaginated,totale:Math.ceil(totale/5)
     })
 
 

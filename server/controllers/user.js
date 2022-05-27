@@ -19,8 +19,6 @@ export const signin = async(req,res) => {
     }catch(err){
         console.log(err)
     }
-    
-
 }
 //generating an account 
 export const newaccount = async(req,res) => {
@@ -54,22 +52,13 @@ export const newaccount = async(req,res) => {
 // getting all the users 
 export const getUsers = async (req,res) => {
     try {
-        const empolyees = await User.find();
-        //extract _id from the object
-        const users = [];
-        empolyees.forEach(empolyee => {
-            users.push({
-                _id:empolyee._id,
-                firstName:empolyee.firstName,
-                lastName:empolyee.lastName,
-                email:empolyee.email,
-                type:empolyee.type,
-                address:empolyee.address,
-                password:empolyee.password,
-                state:empolyee.state
+        const totale = await User.countDocuments({})
+        const page = parseInt(req.query.page || "0")
+        const empolyees = await User.find().limit(5).skip(5 * page);
+        res.status(200).json({
+            employees:empolyees,
+            totale:Math.ceil(totale/5)
             })
-        });        
-        res.status(200).json(empolyees)
         
     }catch(error){
         
@@ -81,30 +70,38 @@ export const getUsers = async (req,res) => {
 //active user 
 
 export const updateUser = async (req,res) => {
+    console.log(req.body.lastName)
     //get the user
-    const { firstName,lastName,type,email,address,password,state,id} = req.body;
-    //change the content 
-    const updateUser = await User.findByIdAndUpdate({_id: new ObjectId(id)},{
+    const { firstName,lastName,type,email,address,password,_id} = req.body;
+    const id = new ObjectId(_id);
+    const updateUser = await User.findByIdAndUpdate(id,{
         firstName:firstName,
         lastName:lastName,
         email:email,
         type:type,
         address:address,
         password:password,
-        state:state,
         _id:id,
     })
+    const updatedUser = await User.findById(id);
+    res.status(200).json(updatedUser)   
+
 
     // response 
-    res.status(200).send('user updated')
 
 }
 
 export const switchStateUser = async (req,res) => {
     const id = new ObjectId(req.body.id);
-    const selectedUser = await User.findOne(id);
-    const currentState = selectedUser.state;
-    console.log(currentState)
-    const switchState = await User.findOneAndUpdate(id,{state:!currentState})
-    res.status(200).send(switchState)
+    const currentUser = await User.findById(id)
+    const state = currentUser.state;
+    var newState = true; 
+    if(state==false) { newState = true }
+    if(state==true) { newState = false}
+  
+    const switchState = await User.findOneAndUpdate({_id:id},{state:newState})
+    const switchedState = await User.findById(id);
+
+    res.status(200).send(switchedState)
 }
+
