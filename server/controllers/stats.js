@@ -75,7 +75,7 @@ export const foodStats = async (req,res) => {
       
 
     res.status(200).json({
-        sales,lastMonthSales,lastWeekSales,NumberOfProducts,revenueLastMonth:revenueLastMonth[0].total,totalRevenue:totalRevenue[0].total,revenueByProducts:productsPaginated,totale:Math.ceil(totale/5)
+        sales,lastMonthSales,lastWeekSales,NumberOfProducts,revenueLastMonth:revenueLastMonth[0].total,totalRevenue:totalRevenue[0].total,revenueByProducts:productsPaginated,totale:Math.ceil(totale/2)
     })
 
 
